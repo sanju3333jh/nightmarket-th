@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NightMarket TH — Find Thailand's Night Markets</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f7f7f5;color:#171717}
+nav{height:68px;background:#111;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 7%;position:sticky;top:0;z-index:5}
+.logo{font-weight:800;font-size:21px}.logo span{color:#ffbf47}
+nav button{background:#ffbf47;border:0;border-radius:999px;padding:10px 16px;font-weight:700;cursor:pointer}
+.hero{padding:72px 7% 55px;background:linear-gradient(135deg,#151515,#292929);color:white}
+.hero h1{font-size:clamp(38px,7vw,70px);line-height:.98;margin:0 0 18px;max-width:850px}
+.hero p{font-size:18px;color:#d7d7d7;max-width:650px;line-height:1.6}
+.search{margin-top:30px;display:flex;gap:10px;max-width:850px}.search input,.search select{padding:16px;border:0;border-radius:12px;font-size:15px}.search input{flex:1}.search select{min-width:150px}
+main{padding:40px 7% 70px}.top{display:flex;justify-content:space-between;align-items:end;gap:20px}.top h2{font-size:30px;margin:0}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}.chip{border:1px solid #ddd;background:white;padding:9px 14px;border-radius:999px;cursor:pointer}.chip.active{background:#111;color:#fff;border-color:#111}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}.card{background:#fff;border:1px solid #e8e8e8;border-radius:18px;overflow:hidden;box-shadow:0 5px 18px #00000008}.pic{height:145px;background:linear-gradient(135deg,#ffcc72,#ff8a65);display:flex;align-items:flex-end;padding:16px;font-size:38px}.card:nth-child(2) .pic{background:linear-gradient(135deg,#8ed8c5,#397b72)}.card:nth-child(3) .pic{background:linear-gradient(135deg,#b9b2ff,#5c58a8)}.card:nth-child(4) .pic{background:linear-gradient(135deg,#ffd66b,#d65b49)}
+.content{padding:18px}.content h3{margin:0 0 6px;font-size:20px}.meta{color:#666;font-size:14px}.tags{display:flex;gap:6px;flex-wrap:wrap;margin:13px 0}.tag{background:#f2f2f2;border-radius:7px;padding:5px 8px;font-size:12px}.row{display:flex;justify-content:space-between;align-items:center;margin-top:15px}.open{color:#16834a;font-weight:700;font-size:13px}.details{border:0;background:#111;color:#fff;border-radius:9px;padding:9px 12px;cursor:pointer}
+.empty{display:none;text-align:center;padding:50px;color:#666}
+footer{background:#111;color:#aaa;padding:35px 7%;font-size:14px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:10;align-items:center;justify-content:center;padding:20px}.box{background:#fff;border-radius:20px;max-width:500px;width:100%;padding:26px}.box h2{margin-top:0}.close{float:right;border:0;background:#eee;border-radius:50%;width:32px;height:32px;cursor:pointer}
+@media(max-width:650px){nav{padding:0 5%}.hero,main{padding-left:5%;padding-right:5%}.search{flex-direction:column}.search select{width:100%}.top{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<nav><div class="logo">NightMarket <span>TH</span></div><button onclick="document.getElementById('submit').style.display='flex'">+ Add Market</button></nav>
+
+<section class="hero">
+<h1>Find your next night market.</h1>
+<p>Discover food, shopping, local vibes and late-night places across Thailand.</p>
+<div class="search">
+<input id="search" placeholder="Search market, city or activity…" oninput="filterCards()">
+<select id="city" onchange="filterCards()"><option value="">All Thailand</option><option>Phuket</option><option>Bangkok</option><option>Chiang Mai</option></select>
+</div>
+</section>
+
+<main>
+<div class="top"><div><h2>Popular tonight</h2><div class="meta">Hand-picked places to explore</div></div></div>
+<div class="filters">
+<button class="chip active" onclick="setFilter(this,'all')">All</button>
+<button class="chip" onclick="setFilter(this,'food')">🍜 Food</button>
+<button class="chip" onclick="setFilter(this,'shopping')">👕 Shopping</button>
+<button class="chip" onclick="setFilter(this,'music')">🎵 Music</button>
+</div>
+
+<div class="grid" id="grid">
+<article class="card" data-city="Phuket" data-tags="food shopping">
+<div class="pic">🌙</div><div class="content"><h3>Chillva Market</h3><div class="meta">📍 Phuket Town · ฿100–300</div><div class="tags"><span class="tag">🍜 Food</span><span class="tag">👕 Shopping</span><span class="tag">🎁 Local</span></div><div class="row"><span class="open">● Usually open evenings</span><button class="details" onclick="show('Chillva Market','Phuket Town','Food, shopping & local atmosphere','฿100–300')">Details</button></div></div>
+</article>
+<article class="card" data-city="Bangkok" data-tags="food shopping music">
+<div class="pic">🍜</div><div class="content"><h3>Jodd Fairs</h3><div class="meta">📍 Bangkok · ฿100–500</div><div class="tags"><span class="tag">🍜 Food</span><span class="tag">👕 Shopping</span><span class="tag">🎵 Music</span></div><div class="row"><span class="open">● Evening market</span><button class="details" onclick="show('Jodd Fairs','Bangkok','Street food, shopping & nightlife','฿100–500')">Details</button></div></div>
+</article>
+<article class="card" data-city="Chiang Mai" data-tags="food shopping">
+<div class="pic">🏮</div><div class="content"><h3>Chiang Mai Night Bazaar</h3><div class="meta">📍 Chiang Mai · ฿50–300</div><div class="tags"><span class="tag">🍜 Food</span><span class="tag">👕 Shopping</span></div><div class="row"><span class="open">● Evening market</span><button class="details" onclick="show('Chiang Mai Night Bazaar','Chiang Mai','Food, souvenirs & shopping','฿50–300')">Details</button></div></div>
+</article>
+<article class="card" data-city="Phuket" data-tags="food music shopping">
+<div class="pic">🎶</div><div class="content"><h3>Phuket Weekend Market</h3><div class="meta">📍 Phuket · ฿50–300</div><div class="tags"><span class="tag">🍜 Food</span><span class="tag">👕 Shopping</span><span class="tag">🎵 Music</span></div><div class="row"><span class="open">● Weekend</span><button class="details" onclick="show('Phuket Weekend Market','Phuket','Street food, vintage & music','฿50–300')">Details</button></div></div>
+</article>
+</div>
+<div class="empty" id="empty">No markets found. Try another search.</div>
+</main>
+
+<footer>NightMarket TH · Discover Thailand after dark. <br><br>Prototype — market hours and details should be verified before publishing.</footer>
+
+<div class="modal" id="modal"><div class="box"><button class="close" onclick="closeModal()">×</button><h2 id="mtitle"></h2><p id="mdesc"></p><p id="mcity"></p><strong id="mprice"></strong></div></div>
+<div class="modal" id="submit"><div class="box"><button class="close" onclick="document.getElementById('submit').style.display='none'">×</button><h2>Add a market</h2><p>Let local businesses and visitors submit a market. In the full version, this form can send listings to your database for review.</p><input style="width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px" placeholder="Market name"><input style="width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px" placeholder="City / area"><button class="details" onclick="alert('Demo only — connect a database to receive submissions.')">Submit</button></div></div>
+
+<script>
+let active='all';
+function setFilter(btn,f){document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));btn.classList.add('active');active=f;filterCards()}
+function filterCards(){
+ const q=document.getElementById('search').value.toLowerCase(), city=document.getElementById('city').value;
+ let count=0;
+ document.querySelectorAll('.card').forEach(c=>{
+  const ok=(active==='all'||c.dataset.tags.includes(active))&&( !city||c.dataset.city===city)&&(c.innerText.toLowerCase().includes(q));
+  c.style.display=ok?'block':'none'; if(ok)count++;
+ });
+ document.getElementById('empty').style.display=count?'none':'block';
+}
+function show(t,c,d,p){document.getElementById('mtitle').innerText=t;document.getElementById('mcity').innerText='📍 '+c;document.getElementById('mdesc').innerText=d;document.getElementById('mprice').innerText=p;document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+</script>
+</body>
+</html>
